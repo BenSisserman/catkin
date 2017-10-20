@@ -1,0 +1,5 @@
+<launch>
+	<node pkg = "beginner_tut" type = "talker_node"  name = "talker_node"  respawn = "true" > </node>
+	<node pkg = "beginner_tut" type = "talker.py"   name = "Hello"    	   respawn = "true"> </node>
+	<node pkg = "beginner_tut" type = "listener.py" name = "listener"      respawn = "true" > </node>
+</launch>
