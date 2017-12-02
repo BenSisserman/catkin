@@ -1,0 +1,16 @@
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <sensor_msgs/Joy.h>
+
+class TeleopTurtle
+{
+public:
+	TeleopTurtle();
+private:
+	void joyCallback(const sensor_msgs::Joy::ConstPtr& joy)://heading for callback
+	ros::NodeHandle nh; //initializes an object node handler. needed in c++
+	int linear,angular;
+	double l_scale,a_scale;
+	ros::NodeHandle nh; //initializes an object node handler. needed$
+	ros::Publisher vel_pub;
+	ros::Subscriber joy_sub;

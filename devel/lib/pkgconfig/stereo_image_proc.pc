@@ -1,0 +1,8 @@
+prefix=/home/ben/catkin_ws/devel
+
+Name: stereo_image_proc
+Description: Description of stereo_image_proc
+Version: 1.12.21
+Cflags: -I/home/ben/catkin_ws/devel/include -I/home/ben/catkin_ws/src/stereo_image_proc/include
+Libs: -L/home/ben/catkin_ws/devel/lib -lstereo_image_proc
+Requires: image_geometry image_proc sensor_msgs stereo_msgs

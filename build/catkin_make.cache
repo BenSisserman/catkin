@@ -1,0 +1,2 @@
+beginner_tut:learningtf:navigation_2016:robot_setup_tf:simple_navigation_goals:stereo_image_proc:turtle_control:usb_cam:viso2/libviso2:viso2/viso2:viso2/viso2_ros:wanderbot
+-DCATKIN_DEVEL_PREFIX=/home/ben/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ben/catkin_ws/install -G Unix Makefiles

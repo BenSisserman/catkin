@@ -1,0 +1,387 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.oaktonrobotics.com" name="bot2016">
+  <xacro:property name="mass" value="1" />
+  <!-- Base Link -->
+  <xacro:property name="base_length" value=".73" />
+  <xacro:property name="base_width" value=".51" />
+  <xacro:property name="base_height" value=".09" />
+  <!-- Kinect -->
+  <xacro:property name="camera_length" value=".065" />
+  <xacro:property name="camera_width" value=".25" />
+  <xacro:property name="camera_height" value=".065" />
+  <!-- Electrical Box -->
+  <xacro:property name="e_box_length" value=".16" />
+  <xacro:property name="e_box_width" value=".51" />
+  <xacro:property name="e_box_height" value=".51" />
+  <!-- Wheel Base -->
+  <xacro:property name="wheel_base_width" value=".07" />
+  <!-- Wheels -->
+  <xacro:property name="wheel_radius" value=".115" />
+  <xacro:property name="wheel_thickness" value=".075" />
+  <!-- Beams -->
+  <xacro:property name="bar_width" value=".01"/>
+  <xacro:property name="arm_length" value=".3"/>
+  <xacro:property name="forearm_length" value=".66"/>
+  <!-- Shovel -->
+  <xacro:property name="shovel_width" value=".31"/>
+  <!-- Colors -->
+  <xacro:macro name="color_black">
+    <material name="black">
+      <color rgba="0 0 0 1"/>
+    </material>
+  </xacro:macro>
+  <xacro:macro name="color_grey">
+    <material name="grey">
+      <color rgba="${192 / 255} ${192 / 255} ${192 / 255} 1"/>
+    </material>
+  </xacro:macro>
+  <xacro:macro name="color_yellow">
+    <material name="yellow">
+      <color rgba="${229 / 255} ${227 / 255} ${54 / 255} 1"/>
+    </material>
+  </xacro:macro>
+  <xacro:macro name="color_blue">
+    <material name="blue">
+      <color rgba="${63 / 255} ${157 / 255} ${214 / 255} 1"/>
+    </material>
+  </xacro:macro>
+
+  <link name="base_link">
+    <inertial>
+      <mass value="${mass * 4}"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <xacro:color_grey />
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="base_to_camera" type="fixed">
+    <parent link="base_link"/>
+    <child link="kinect2_link"/>
+    <origin rpy="${-pi / 2} 0 ${-pi / 2}" xyz="${base_length / 2 - camera_length / 2} 0 ${base_height / 2 + camera_height / 2}"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="kinect2_link">
+    <visual>
+      <geometry>
+        <box size="${camera_length} ${camera_width} ${camera_height}"/>
+      </geometry>
+      <origin rpy="0 0 ${pi / 2}" xyz="0 0 0"/>
+      <xacro:color_black />
+      <material name="green">
+        <color rgba="0.34 0.74 0.56 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${camera_length} ${camera_width} ${camera_height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_link_to_e_box" type="fixed">
+    <parent link="base_link"/>
+    <child link="e_box"/>
+    <origin rpy="0 0 0" xyz="${-base_length / 2 + e_box_length / 2} 0 ${base_height / 2 + e_box_height / 2}"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="e_box">
+    <inertial>
+      <mass value="${mass * 4}"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${e_box_length} ${e_box_width} ${e_box_height}"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <xacro:color_grey />
+      <geometry>
+        <box size="${e_box_length} ${e_box_width} ${e_box_height}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="e_box_to_arm_pivot" type="revolute">
+    <parent link="e_box"/>
+    <child link="arm_pivot"/>
+    <origin rpy="${pi / 2} 0 0" xyz="${e_box_length / 2 + .015} 0 ${e_box_height / 2}"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="-1.0" lower="${pi / 6}" upper="${pi / 6}" velocity="-1.0"/>
+  </joint>
+
+  <link name="arm_pivot">
+    <inertial>
+      <mass value="${mass}"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.145833" ixy="0" ixz="0" iyy="0.145833" iyz="0" izz="0.125"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="${e_box_width}" radius="0.01"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="${e_box_width}" radius="0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <xacro:macro name="arm" params="prefix reflect">
+    <joint name="arm_pivot_to_${prefix}_arm" type="fixed">
+      <parent link="arm_pivot"/>
+      <child link="${prefix}_arm"/>
+      <origin rpy="0 0 ${pi / 2}" xyz="0 0 ${reflect * (e_box_width / 2 + bar_width / 2)}"/>
+      <axis xyz="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}_arm">
+      <inertial>
+        <mass value="${mass}"/>
+        <origin rpy="0 0 0" xyz="0 ${-arm_length / 2} 0"/>
+        <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+      </inertial>
+      <collision name="collision">
+        <origin rpy="0 0 0" xyz="0 ${-arm_length / 2} 0"/>
+        <geometry>
+          <box size="${bar_width} ${arm_length} ${bar_width}"/>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <origin rpy="0 0 0" xyz="0 ${-arm_length / 2} 0"/>
+        <geometry>
+          <box size="${bar_width} ${arm_length} ${bar_width}"/>
+        </geometry>
+      </visual>
+    </link>
+  </xacro:macro>
+  <xacro:arm prefix="right" reflect="1" />
+  <xacro:arm prefix="left" reflect="-1" />
+
+  <joint name="arm_pivot_to_arm_crossbar" type="fixed">
+    <parent link="arm_pivot"/>
+    <child link="arm_crossbar"/>
+    <origin rpy="0 0 0" xyz="${arm_length + bar_width / 2} 0 0"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="arm_crossbar">
+    <inertial>
+      <mass value="${mass}"/>
+      <origin rpy="${pi / 2} 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="${pi / 2} 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${bar_width} ${e_box_width + bar_width * 2} ${bar_width}"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="${pi / 2} 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${bar_width} ${e_box_width + bar_width * 2} ${bar_width}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <xacro:macro name="forearm" params="prefix reflect">
+    <joint name="arm_crossbar_to_${prefix}_forearm" type="fixed">
+      <parent link="arm_crossbar"/>
+      <child link="${prefix}_forearm"/>
+      <origin rpy="0 0 ${pi / 3}" xyz="0 0 ${reflect * (e_box_width + bar_width) / 2}"/>
+      <axis xyz="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}_forearm">
+      <inertial>
+        <mass value="${mass}"/>
+        <origin rpy="0 0 0" xyz="0 ${-forearm_length / 2} 0"/>
+        <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+      </inertial>
+      <collision name="collision">
+        <origin rpy="0 0 0" xyz="0 ${-forearm_length / 2} 0"/>
+        <geometry>
+          <box size="${bar_width} ${forearm_length} ${bar_width}"/>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <origin rpy="0 0 0" xyz="0 ${-forearm_length / 2} 0"/>
+        <geometry>
+          <box size="${bar_width} ${forearm_length} ${bar_width}"/>
+        </geometry>
+      </visual>
+    </link>
+  </xacro:macro>
+  <xacro:forearm prefix="right" reflect="1" />
+  <xacro:forearm prefix="left" reflect="-1" />
+
+  <joint name="arm_crossbar_to_shovel_base" type="revolute">
+    <parent link="arm_crossbar"/>
+    <child link="shovel_base"/>
+    <origin rpy="0 0 0" xyz="${forearm_length / 2 * 1.7320508} ${-forearm_length / 2} 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="-1.0" upper="${pi / 12}" lower="${-pi / 4}" velocity="-1.0"/>
+  </joint>
+
+  <link name="shovel_base">
+    <inertial>
+      <mass value="${mass}"/>
+      <origin rpy="0 ${pi / 2} ${pi / 2}" xyz="${shovel_width / 2} 0 0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0 ${pi / 2} ${pi / 2}" xyz="${shovel_width / 2} 0 0"/>
+      <geometry>
+        <box size="${e_box_width + bar_width * 2} ${shovel_width} ${bar_width}"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="0 ${pi / 2} ${pi / 2}" xyz="${shovel_width / 2} 0 0"/>
+      <xacro:color_yellow />
+      <geometry>
+        <box size="${e_box_width + bar_width * 2} ${shovel_width} ${bar_width}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="shovel_base_to_shovel_wall" type="fixed">
+    <parent link="shovel_base"/>
+    <child link="shovel_wall"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="shovel_wall">
+    <inertial>
+      <mass value="${mass}"/>
+      <origin rpy="${pi / 2} ${pi / 2} ${pi / 2}" xyz="0 0 0"/>
+      <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="${pi / 2} ${pi / 2} ${pi / 2}" xyz="0 ${shovel_width / 2} 0"/>
+      <geometry>
+        <box size="${e_box_width + bar_width * 2} ${shovel_width} ${bar_width}"/>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <origin rpy="${pi / 2} ${pi / 2} ${pi / 2}" xyz="0 ${shovel_width / 2} 0"/>
+      <xacro:color_yellow />
+      <geometry>
+        <box size="${e_box_width + bar_width * 2} ${shovel_width} ${bar_width}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <xacro:macro name="wheels" params="prefix reflect">
+    <joint name="base_link_to_${prefix}_wheel_base" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_wheel_base"/>
+      <origin rpy="0 0 0" xyz="${reflect * (base_length / 2 - wheel_base_width / 2)} 0 ${-(base_height + wheel_base_width) / 2}"/>
+      <axis xyz="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}_wheel_base">
+      <inertial>
+        <mass value="${mass}"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <inertia ixx="0.166667" ixy="0" ixz="0" iyy="0.166667" iyz="0" izz="0.166667"/>
+      </inertial>
+      <collision name="collision">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <box size="${wheel_base_width} ${base_width} ${wheel_base_width}"/>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <xacro:color_black />
+        <geometry>
+          <box size="${wheel_base_width} ${base_width} ${wheel_base_width}"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}_wheel_base_to_${prefix}_left_wheel" type="continuous">
+      <parent link="${prefix}_wheel_base"/>
+      <child link="${prefix}_left_wheel"/>
+      <origin rpy="${-pi / 2} 0 0" xyz="0 ${-reflect * (base_width + wheel_thickness) / 2} 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="-1.0" velocity="-1.0"/>
+    </joint>
+
+    <link name="${prefix}_left_wheel">
+      <inertial>
+        <mass value="${mass}"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <inertia ixx="0.145833" ixy="0" ixz="0" iyy="0.145833" iyz="0" izz="0.125"/>
+      </inertial>
+      <collision name="collision">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <xacro:color_blue />
+        <geometry>
+          <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}_wheel_base_to_${prefix}_right_wheel" type="continuous">
+      <parent link="${prefix}_wheel_base"/>
+      <child link="${prefix}_right_wheel"/>
+      <origin rpy="${-pi / 2} 0 0" xyz="0 ${reflect * (base_width + wheel_thickness) / 2} 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="-1.0" velocity="-1.0"/>
+    </joint>
+
+    <link name="${prefix}_right_wheel">
+      <inertial>
+        <mass value="${mass}"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <inertia ixx="0.145833" ixy="0" ixz="0" iyy="0.145833" iyz="0" izz="0.125"/>
+      </inertial>
+      <collision name="collision">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <xacro:color_blue />
+        <geometry>
+          <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+      </visual>
+    </link>
+  </xacro:macro>
+  <xacro:wheels prefix="front" reflect="1" />
+  <xacro:wheels prefix="rear" reflect="-1" /> 
+  
+</robot>

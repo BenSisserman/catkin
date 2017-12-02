@@ -1,0 +1,8 @@
+prefix=/home/ben/catkin_ws/devel
+
+Name: turtle_control
+Description: Description of turtle_control
+Version: 0.0.0
+Cflags: -I/home/ben/catkin_ws/src/turtle_control/include
+Libs: -L/home/ben/catkin_ws/devel/lib 
+Requires: joy roscpp turtlesim ar_track_alvar

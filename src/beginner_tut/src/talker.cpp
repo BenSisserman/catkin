@@ -13,7 +13,7 @@ int main(int argc, char **argv){
 
 	ros::Publisher pub = nh.advertise<std_msgs::String>("chatter",1000);
 	ros::Rate r(10);
-	//sets the rate of ros loop
+	//sets the rate of 10Hz
 
 	while(ros::ok()){
 		std_msgs::String msg;

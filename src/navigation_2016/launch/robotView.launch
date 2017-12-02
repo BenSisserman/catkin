@@ -1,0 +1,16 @@
+<launch>
+	<!-- <param name="robot_description" command="cat $(find navigation_2016)/data/bot2016.urdf" /> -->
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find navigation_2016)/data/bot2016.xacro'" />
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+  	<param name="use_gui" value="true"/>
+  </node>
+
+  <!-- <arg name="pi/2" value="1.5707963267948966"/>
+  <arg name="optical_rotate" value="0 0 0 -$(arg pi/2) 0 -$(arg pi/2)" />
+  <node pkg="tf" type="static_transform_publisher" name="base_link" args="$(arg optical_rotate) base_link kinect2_link 100" /> -->
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"></node>
+
+  <node name="rviz" pkg="rviz" type="rviz" required="true"/>
+</launch>

@@ -1,0 +1,37 @@
+# Parameters can be found at: http://wiki.ros.org/base_local_planner
+TrajectoryPlannerROS:
+  ## Robot Configuration Parameters
+  acc_lim_x:  1
+  acc_lim_theta: 1
+
+  max_vel_x:  0.170
+  min_vel_x:  0.068
+  max_vel_theta: 0.5 ### Don't set too high or visual odom will lose tracking
+  min_vel_theta: -0.5
+  min_in_place_vel_theta: 0.5
+
+  escape_vel: -0.1
+
+  holonomic_robot: false ### Set to false because robot can only move forwards and backwards in one axis
+
+  xy_goal_tolerance:  0.20
+  yaw_goal_tolerance: 0.20
+
+  ## Forward Simulation Parameters - Used to calculate trajectories forwards in time
+  sim_time: 1.7
+  sim_granularity: 0.025
+  vx_samples: 3
+  vtheta_samples: 20
+  controller_frequency: 10
+
+  ## Trajectory Scoring Parameters
+  meter_scoring: true
+  pdist_scale: 0.6
+  gdist_scale: 0.8
+  occdist_scale: 0.01
+  dwa: true
+  heading_lookahead: 0.325
+  
+  ## Oscillation Prevention Parameters
+  oscillation_reset_dist: 0.05
+  

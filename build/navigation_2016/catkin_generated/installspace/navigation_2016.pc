@@ -1,0 +1,8 @@
+prefix=/home/ben/catkin_ws/install
+
+Name: navigation_2016
+Description: Description of navigation_2016
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ben/catkin_ws/install/lib 
+Requires: 
